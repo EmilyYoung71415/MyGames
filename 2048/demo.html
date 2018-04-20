@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+
+<body>
+    <!--标题-->
+    <header>
+        <div class="left">
+            <p>2048</p>
+        </div>
+        <div class="curscore">本次得分:
+            <br>0</div>
+        <div class="sumscore">总分:
+            <br>0</div>
+        <div class="right">
+            <p>重新开始</p>
+        </div>
+    </header>
+    <!--棋盘-->
+    <div class="board">
+        <div class="board_cell cellshow rightborder" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div>
+    </div>
+    <!--Welcome 游戏配置-->
+    <div class="dialog welcome">
+        <h1>Welcome!</h1>
+        <div class="choose">
+            <h6 class="choose-title">选择关卡</h6>
+            <div class="choose-items">
+                <span>容易：1024</span>
+                <span>普通: 2048</span>
+                <span>偏难: 4096</span>
+            </div>
+        </div>
+        <div class="choose">
+            <h6 class="choose-title">游戏设置</h6>
+            <div class="choose-items">
+                <span>音效 <input type="checkbox"></span>
+                <span>背景音乐 <input type="checkbox"></span>
+            </div>
+        </div>
+        <span class="btn">开始游戏</span>
+    </div>
+    <!--result 成功或失败-->
+    <div class="dialog lose hidden">
+        <h1>Oooooooops!</h1>
+        <h6 class="content">很遗憾游戏结束😥</h6>
+        <span class="btn">再来一局!</span>
+    </div>
+    <div class="dialog win hidden">
+        <h1>Duang!</h1>
+        <h6 class="content">恭喜你获得游戏胜利✨✨</h6>
+        <span class="btn">再来一局!</span>
+    </div>
+</body>
+
+</html>
