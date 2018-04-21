@@ -43,7 +43,7 @@
         <div class="board_cell" data-key="">2</div>
     </div>
     <!--Welcome 游戏配置-->
-    <div class="dialog welcome">
+    <div class="dialog welcome hidden">
         <h1>Welcome!</h1>
         <div class="choose">
             <h6 class="choose-title">选择关卡</h6>
@@ -73,6 +73,17 @@
         <h6 class="content">恭喜你获得游戏胜利✨✨</h6>
         <span class="btn">再来一局!</span>
     </div>
+    <script src="./js/index.js"></script>
+    <script>
+        game2048({
+            boardBox :document.querySelector(".chess_board"),
+            curScoreBox:document.querySelector('.curscore'),
+            sumScoreBox:document.querySelector('.sumscore')
+        }).play();
+    
+    
+    
+    </script>
 </body>
 
 </html>

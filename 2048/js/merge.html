@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let
+            arr = [
+                // left
+                [2, 2, 4, 0], //2 2 0 0 -- 4 0 0 0
+                [0, 0, 0, 0], //2 0 0 0 -- 2 0 0 0 
+                [0, 0, 0, 0], //2 0 0 0 -- 2 0 0 0
+                [0, 0, 0, 8] // 0 0 0 0 
+            ],
+           // direction = 'left',
+            curScore = 0,
+            sumScore = 0;
+        //根据滑动方向生成不同的二维数组展现方式
+
+        move();
+        move();
+        function move(dir) {
+            let convertedArr = arr; //根据不同方向得到的新数组 convertArr()
+            if(!checkMoveable(convertedArr)) {
+                // 抖一抖
+                console.log('游戏结束')
+                return;
+            }
+            // 合并后的二维数组
+            let mergedArr = mergeArr(convertedArr);
+            // 将二维数组转换为normalArr
+            let resultArr = mergedArr //convertArr(mergedArr);
+            // resultArr = boardArr
+        }
+        function checkMoveable(arr){
+            for (let i = 0; i < arr.length; i++) {
+                let row = arr[i];
+                // checkMoveable 情况1，移动前方有空位
+                if(row.indexOf(0)>-1&&row.indexOf(0)<4){
+                    return true;
+                }
+                for(let j=0;j<row.length;j++){
+                    if(row[j]==row[j+1]) 
+                        return true;
+                }
+                return false;
+            }
+        }
+        function mergeArr(arr) {
+            let newArr = [[],[],[],[]];
+            // 将每行进行零归一操作 (将零归到一起)
+            for (let i = 0; i < arr.length; i++) {
+                let row = arr[i];
+                // 将row的所有0移到末尾变为 2200
+                row = getMoveInit(row);
+                newArr[i] = row;
+               
+                // 合并
+                for(let j=0;j<4;j++){
+                    if(row[j+1]==row[j]&&row[j]!==0){
+                        newArr[i][j] += newArr[i][j+1];
+                        curScore += newArr[i][j];
+                        sumScore += curScore;
+                        newArr[i][j+1] = 0;
+                    }
+                }
+
+                // 再次调用零归一操作(因为会新产生0)
+                newArr[i] = getMoveInit(newArr[i]);
+            }
+            return newArr;
+        }
+
+        function getMoveInit(arr) {
+            //思路:按顺序存储数字 不足补齐0
+            let tempArr = [];
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i] !== 0) {
+                    tempArr.push(arr[i])
+                }
+            }
+            for (let j = tempArr.length; j < arr.length; j++) {
+                tempArr[j] = 0;
+            }
+            return tempArr;
+        }
+    </script>
+</body>
+
+</html>
