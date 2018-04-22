@@ -151,6 +151,7 @@ right {
     border-radius: 7px;
     text-align: center;
     margin: 5% 30%;
+    cursor: pointer;
     background: rebeccapurple;
 }
 

@@ -69,7 +69,7 @@
                 }
                 // 游戏结束
                 this.updateView();
-                if(this.boardObj.isOver){
+                if(this.boardObj.isLose()){
                     let loseNode = document.querySelector('.lose');
                     loseNode.classList.remove('hidden');
                     return;
@@ -94,6 +94,10 @@
             for(let i=0;i<clearBtns.length;i++){
                 clearBtns[i].addEventListener('click',clear)
             }
+        },
+        isGameOver:function(){
+            const {boardArr} = this.boardObj;
+            // 全局无空格
         },
         initView: function(){
             // 初始化页面Dom结构
@@ -177,7 +181,6 @@
         this.usefulCells = []; // 空格
         this.size = argOptions.size;
         this.level = argOptions.level;
-        this.isOver = false;
         this.isWin = false;
         this.curScoreArr = [0];//每次合并得到的合并值数组
         Object.assign(this, props);
@@ -185,13 +188,6 @@
     }
 
     Board.prototype = {
-        clear:function(){
-            this.boardArr = [];
-            this.usefulCells = [];
-            this.isOver = false;
-            this.isWin = false;
-            this.curScoreArr = [0];
-        },
         initBoard: function () {
             // 初始化棋盘，全0 
             for (let i = 0; i < this.size; i++) {
@@ -226,14 +222,11 @@
             }
         },
         move:function(dir){
+            
             this.curScoreArr = [0];
             //0:左, 1:上, 2:右, 3:下
             //根据不同方向得到的新数组 convertArr()            
             let convertedArr = convertArr(this.boardArr, dir);
-            if(this.isGameOver(convertedArr)) {
-                this.isOver = true;
-                return;
-            }
             // 合并后的二维数组
             let mergedArr = this.mergeArr(convertedArr);
             // 将数组转换为正常数组
@@ -242,10 +235,35 @@
             // 判断移动完之后是否出现了2048 curScore <== 1024 
             if(this.curScoreArr.includes(this.level)){
                 this.isWin = true;
+                // 如果成功则无需再产生新棋子
                 return ;
             } 
             //有效移动 随机产生新格子
             this.gernerateNew(1);
+        },
+        isLose:function(){
+            // 判断是否还存在0
+            for (let i = 0; i < this.size; i++){ 
+                for (let j = 1; j < this.size; j++) {
+                    if(!this.boardArr[i][j]){
+                        return false;
+                    }
+                }
+            }
+
+            //  元素上下左右不等
+            for (let i = 0; i < this.size; i++){ // 左右不等
+                for (let j = 1; j < this.size; j++) {
+                    if (this.boardArr[i][j] == this.boardArr[i][j - 1])
+                    return false;
+                }
+            }
+            for (let j = 0; j < this.size; j++)  // 上下不等
+                for (let i = 1; i < this.size; i++) {
+                    if (this.boardArr[i][j] == this.boardArr[i - 1][j])
+                    return false;
+            }
+            return true;
         },
         clear:function(ops){
             this.boardArr = [];
@@ -258,7 +276,15 @@
             Object.assign(this, ops);
             this.initBoard();
         },
-        isGameOver:function(arr){
+        // 判断按既定方向该次的移动是否有效
+        isMoveable:function(arr){
+            /* 
+                boarArr: left        arr    
+                    0 2 2 0 ---- 2 2 0 0
+                    2 4 2 0 ---- 2 4 2 0
+                    2 2 0 4 ---- 2 2 4 0
+                    0 0 2 0 ---- 2 0 0 0
+            */
             for (let i = 0; i < arr.length; i++) {
                 let row = arr[i];
                 // checkMoveable 情况1，移动前方有空位
