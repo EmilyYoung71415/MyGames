@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/theme.css">
 </head>
 
 <body>
@@ -25,22 +26,16 @@
     </header>
     <!--棋盘-->
     <div class="board">
-        <div class="board_cell cellshow rightborder" data-key="">2</div>
+        <!-- <div class="board_cell cell-con-32" data-key="">
+            2
+        </div> -->
+        <!-- <div class="board_cell" data-key="">2</div>
         <div class="board_cell" data-key="">2</div>
         <div class="board_cell" data-key="">2</div>
         <div class="board_cell" data-key="">2</div>
         <div class="board_cell" data-key="">2</div>
         <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
+        <div class="board_cell" data-key="">2</div> -->
     </div>
     <!--Welcome 游戏配置-->
     <div class="dialog welcome hidden">
@@ -73,13 +68,15 @@
         <h6 class="content">恭喜你获得游戏胜利✨✨</h6>
         <span class="btn">再来一局!</span>
     </div>
+    <script src="./js/util.js"></script>
     <script src="./js/index.js"></script>
     <script>
         game2048({
-            boardBox :document.querySelector(".chess_board"),
+            boardBox :document.querySelector(".board"),
             curScoreBox:document.querySelector('.curscore'),
-            sumScoreBox:document.querySelector('.sumscore')
-        }).play();
+            sumScoreBox:document.querySelector('.sumscore'),
+            guideLine:true
+        });
     
     
     

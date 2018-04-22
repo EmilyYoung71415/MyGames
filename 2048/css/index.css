@@ -1,3 +1,7 @@
+:root{
+    --borderHighlight:blue;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -63,19 +67,27 @@ right {
     width: 140px;
     float: left;
     margin: 0;
+    font-size: 3.6rem;    
     text-align: center;
+    line-height: 140px;
     border: 2px solid lightslategray;
     border-radius: 4px;
     background-color: rgba(251, 255, 251, 0.3);
 }
 
-.cellshow {
-    background: orange;
+.border-left{
+    border-left:4px solid var(--borderHighlight);
+}
+.border-top{
+    border-top:4px solid var(--borderHighlight);
+}
+.border-right{
+    border-right:4px solid var(--borderHighlight);
+}
+.border-bottom{
+    border-bottom:4px solid var(--borderHighlight);
 }
 
-.rightborder {
-    border-right: 4px solid red;
-}
 
 .hidden{
     display: none;

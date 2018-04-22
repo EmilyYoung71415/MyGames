@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+           let
+            arr = [
+                // left
+                [2, 2, 2, 2], //2 2 0 0 -- 4 0 0 0
+                [0, 4, 0., 0], //2 0 0 0 -- 2 0 0 0 
+                [2, 2, 0, 8], //2 0 0 0 -- 2 0 0 0
+                [0, 0, 0, 8] // 0 0 0 0 
+            ];
+
+           console.log(arr)
+
+            for(let i=0;i<4;i++){
+                let row = arr[i];
+                for(let j=0;j<4;j++){
+                    let col = [];
+                    col.push(
+                        arr[0][j],
+                        arr[1][j],
+                        arr[2][j],
+                        arr[3][j]
+                    )
+                    // 找到矩阵中最近一圈的有数字的位置，判断是否相等
+                    //add leftborder 
+                    let temp = arr[i][j];
+                    //let rowDir = checkCombine(row,j); // 本行的第几个元素 [0,0] 左右
+                    //let colDir = checkCombine(col,i); // 本列的第几个元素 [0,0] 上下
+                    //let direction = getConvertDir(rowDir,colDir);
+                    // console.log(temp)
+                    // console.log(direction)
+                }
+            }
+
+            function getConvertDir(row,col){
+                let direction = [];
+                if(row[0]) direction.push('left');
+                if(row[1]) direction.push('right');
+                if(col[0]) direction.push('top');
+                if(col[1]) direction.push('bottom');
+                return direction;
+            }
+
+            //checkCombine([2, 2, 0, 4],0);
+            // 0 1 2 3 上右下左边
+            // 传入 row / col 标志
+            // 返回 rowdirenction = ['left','right']  ;无则是[]空数组 
+            // coldirection  连接[] [] ==>['left','right','top']
+            function checkCombine(arr,index){
+                console.log(arr,index)
+                //console.log(arr,index)
+                // 往左搜索、往右搜索 ===》 对应返回 0 0
+                let backArr = [0,0] //默认是左右均不能合并
+                // 左 只需要找改变的，即出现合并的情况
+                let temp = arr[index];
+                if(index>0){
+                    let leftIndex = index;
+                    while(leftIndex>0){
+                        leftIndex--;
+                        if(arr[leftIndex]!==0){
+                            if(arr[leftIndex]===temp) 
+                            backArr[0]=1;
+                            break;
+                        }
+                    }
+                }
+                // 右
+                if(index<3){
+                    // 1 2 3
+                    let rightIndex = index;
+                    console.log(rightIndex)
+                    while(rightIndex<4){
+                        rightIndex++;
+                        if(arr[rightIndex]!==0){
+                            if(arr[rightIndex]===temp) 
+                            backArr[1]=1;
+                            break;
+                        }
+                    }
+                }
+                console.log('backArr   '+backArr)
+                return backArr;
+            }
+
+
+    </script>
+</body>
+</html>

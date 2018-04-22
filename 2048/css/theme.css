@@ -1,0 +1,44 @@
+
+.cell-con-2 { background: #eee4da; }
+.cell-con-4 { background: #ede0c8; }
+.cell-con-8 {
+  color: #f9f6f2;
+  background: #f2b179;
+}
+.cell-con-16 {
+  color: #f9f6f2;
+  background: #f59563;
+}
+.cell-con-32 {
+  color: #f9f6f2;
+  background: #f67c5f;
+}
+.cell-con-64 {
+  color: #f9f6f2;
+  background: #f65e3b;
+}
+.cell-con-128 {
+  color: #f9f6f2;
+  background: #edcf72;
+  font-size: 30px;
+}
+.cell-con-256 {
+  color: #f9f6f2;
+  font-size: 30px;
+  background: #edcc61;
+}
+.cell-con-512 {
+  color: #f9f6f2;
+  font-size: 30px;
+  background: #edc850;
+}
+.cell-con-1024 {
+  color: #f9f6f2;
+  font-size: 25px;
+  background: #edc53f;
+}
+.cell-con-2048 {
+  color: #f9f6f2;
+  font-size: 25px;
+  background: #edc22e;
+}  
