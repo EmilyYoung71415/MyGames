@@ -138,3 +138,16 @@ function normalArr(arr,dir) {
     }
     return result;
 }
+
+
+/**
+ * @desc 播放音乐
+ * 
+ */
+
+ function playSound(name){
+    const audio = document.querySelector(`audio[data-key="${name}"]`); // 根据触发按键的键码，获取对应音频
+    if (!audio) return; 
+    audio.currentTime = 0; // 每次播放之后都使音频播放进度归零
+    audio.play(); // 播放相应音效
+ }

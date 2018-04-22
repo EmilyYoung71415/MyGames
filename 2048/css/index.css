@@ -153,6 +153,10 @@ right {
     margin: 5% 30%;
     background: rebeccapurple;
 }
+
+.chosed{
+    background: rebeccapurple;
+}
 @media (max-width: 768px) {
     header {
         width: 90%;

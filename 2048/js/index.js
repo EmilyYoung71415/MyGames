@@ -43,10 +43,12 @@
                 boardBox.classList.add("board");
                 document.body.appendChild(boardBox);
             }
+
             this.play();
             return this;
         },
         play: function () {
+            if(this.options.bgMusic) playSound('bgMusic');
             this.initView();
             //监听键盘事件触发updateView
             let move=(e)=>{
@@ -118,6 +120,7 @@
             loseNode.classList.add('hidden');
             // 更新得分视图
             let curMax = Math.max.apply(null,curScoreArr);// 每次移动获得的最大得分
+            if(this.options.music) playSound(curMax);
             this.curScore = curScoreArr.reduce((prev,cur)=> prev + cur)
             this.sumScore +=  this.curScore;
             curScoreBox.innerText = `本次得分:${this.curScore}`;
@@ -173,7 +176,7 @@
         this.boardArr = [];
         this.usefulCells = []; // 空格
         this.size = argOptions.size;
-        this.level = 16;//argOptions.level;
+        this.level = argOptions.level;
         this.isOver = false;
         this.isWin = false;
         this.curScoreArr = [0];//每次合并得到的合并值数组
@@ -237,7 +240,7 @@
             let resultArr =  normalArr(mergedArr,dir);
             this.boardArr = resultArr;
             // 判断移动完之后是否出现了2048 curScore <== 1024 
-            if(this.curScoreArr.includes(16)){
+            if(this.curScoreArr.includes(this.level)){
                 this.isWin = true;
                 return ;
             } 
@@ -248,7 +251,7 @@
             this.boardArr = [];
             this.usefulCells = []; // 空格
             this.size = argOptions.size;
-            this.level = 16;//argOptions.level;
+            this.level = argOptions.level;
             this.isOver = false;
             this.isWin = false;
             this.curScoreArr = [0];

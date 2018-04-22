@@ -35,21 +35,21 @@
         <div class="board_cell" data-key="">2</div> -->
     </div>
     <!--Welcome 游戏配置-->
-    <div class="dialog welcome hidden">
+    <div class="dialog welcome">
         <h1>Welcome!</h1>
         <div class="choose">
-            <h6 class="choose-title">选择关卡</h6>
+            <h6 class="choose-title">选择目标分数</h6>
             <div class="choose-items">
-                <span>容易：1024</span>
-                <span>普通: 2048</span>
-                <span>偏难: 4096</span>
+                <span class="level ">1024</span>
+                <span class="level chosed">2048</span>
+                <span class="level">4096</span>
             </div>
         </div>
         <div class="choose">
             <h6 class="choose-title">游戏设置</h6>
             <div class="choose-items">
-                <span>音效 <input type="checkbox"></span>
-                <span>背景音乐 <input type="checkbox"></span>
+                <span>MUSIC <input type="checkbox" checked ></span>
+                <span>BGM <input type="checkbox" checked></span>
             </div>
         </div>
         <span class="btn clear">开始游戏</span>
@@ -75,19 +75,51 @@
     <audio data-key="256" src="sounds/256.wav"></audio>
     <audio data-key="512" src="sounds/512.wav"></audio>
     <audio data-key="1024" src="sounds/1024.wav"></audio>
-    <audio data-key="1024" src="sounds/bg-Schnappi.mp3"></audio>
+    <audio data-key="bgMusic" src="sounds/bg-Schnappi.mp3"></audio>
     <script src="./js/util.js"></script>
     <script src="./js/index.js"></script>
     <script>
-        game2048({
-            boardBox :document.querySelector(".board"),
-            curScoreBox:document.querySelector('.curscore'),
-            sumScoreBox:document.querySelector('.sumscore'),
-            guideLine:true
-        });
-    
+        let levelBtns = document.querySelectorAll('.level');
+        let startBtn = document.querySelector('.welcome .btn');
+        let checkBoxs = document.querySelectorAll('input');
+        let welcomeBox = document.querySelector('.welcome');
+        // 监听游戏难度按钮click
+        for(let i=0;i<levelBtns.length;i++){
+            levelBtns[i].addEventListener('click',function(e){
+                for(let j=0;j<levelBtns.length;j++){
+                    levelBtns[j].classList.remove('chosed')
+                }
+                levelBtns[i].classList.toggle('chosed')
+            })
+        }   
         
+
+        startBtn.addEventListener('click',function(e){
+            // 收集游戏配置选项
+            let bgMusic = true,
+                music = true;
+            let chosedBtn = document.querySelector('.chosed');
+            let level = Number(chosedBtn.innerHTML);
+            if(!checkBoxs[0].checked) bgMusic = false;
+            if(!checkBoxs[1].checked) music = false;
+
+            let argOptions = {
+                level,
+                bgMusic,
+                music
+            }
+            welcomeBox.classList.add('hidden');
+            game2048({
+                boardBox :document.querySelector(".board"),
+                curScoreBox:document.querySelector('.curscore'),
+                sumScoreBox:document.querySelector('.sumscore'),
+                ...argOptions
+            });
+        })
+
     
+
+        
     </script>
 </body>
 
