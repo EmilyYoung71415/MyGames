@@ -16,11 +16,13 @@
         <div class="left">
             <p>2048</p>
         </div>
-        <div class="curscore">本次得分:
-            <br>0</div>
-        <div class="sumscore">总分:
-            <br>0</div>
-        <div class="right">
+        <div class="curscore">
+            本次得分:<br>0
+        </div>
+        <div class="sumscore">
+            总分:<br>0
+        </div>
+        <div class="right clear">
             <p>重新开始</p>
         </div>
     </header>
@@ -30,11 +32,6 @@
             2
         </div> -->
         <!-- <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div>
         <div class="board_cell" data-key="">2</div> -->
     </div>
     <!--Welcome 游戏配置-->
@@ -55,19 +52,30 @@
                 <span>背景音乐 <input type="checkbox"></span>
             </div>
         </div>
-        <span class="btn">开始游戏</span>
+        <span class="btn clear">开始游戏</span>
     </div>
     <!--result 成功或失败-->
     <div class="dialog lose hidden">
         <h1>Oooooooops!</h1>
         <h6 class="content">很遗憾游戏结束😥</h6>
-        <span class="btn">再来一局!</span>
+        <span class="btn clear">再来一局!</span>
     </div>
     <div class="dialog win hidden">
         <h1>Duang!</h1>
         <h6 class="content">恭喜你获得游戏胜利✨✨</h6>
-        <span class="btn">再来一局!</span>
+        <span class="btn clear">再来一局!</span>
     </div>
+    <!--音效-->
+    <audio data-key="4" src="sounds/4.wav"></audio>
+    <audio data-key="8" src="sounds/8.wav"></audio>
+    <audio data-key="16" src="sounds/16.wav"></audio>
+    <audio data-key="32" src="sounds/32.wav"></audio>
+    <audio data-key="64" src="sounds/64.wav"></audio>
+    <audio data-key="128" src="sounds/128.wav"></audio>
+    <audio data-key="256" src="sounds/256.wav"></audio>
+    <audio data-key="512" src="sounds/512.wav"></audio>
+    <audio data-key="1024" src="sounds/1024.wav"></audio>
+    <audio data-key="1024" src="sounds/bg-Schnappi.mp3"></audio>
     <script src="./js/util.js"></script>
     <script src="./js/index.js"></script>
     <script>
@@ -78,7 +86,7 @@
             guideLine:true
         });
     
-    
+        
     
     </script>
 </body>

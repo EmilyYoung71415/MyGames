@@ -49,6 +49,49 @@
         play: function () {
             this.initView();
             //监听键盘事件触发updateView
+            let move=(e)=>{
+                // 0:左, 1:上 2:右, 3:下
+                switch (e.keyCode) {
+                    case 37://left
+                        e.preventDefault();
+                        this.boardObj.move(0);break;
+                    case 38://up
+                        e.preventDefault();
+                        this.boardObj.move(1);break;
+                    case 39://right
+                        e.preventDefault();
+                        this.boardObj.move(2);break;
+                    case 40://down
+                        e.preventDefault();
+                        this.boardObj.move(3);break;
+                }
+                // 游戏结束
+                this.updateView();
+                if(this.boardObj.isOver){
+                    let loseNode = document.querySelector('.lose');
+                    loseNode.classList.remove('hidden');
+                    return;
+                }
+                if(this.boardObj.isWin){
+                    let winNode = document.querySelector('.win');
+                    winNode.classList.remove('hidden');
+                    return;
+                }
+            }
+
+            let clear=()=>{
+                this.boardObj.clear();
+                this.curScore = 0;
+                this.curScoreBox = []; //存放每次移动的得到的新值arr
+                this.sumScore = 0;
+                this.updateView();
+            }
+            window.addEventListener('keydown', move);
+            // 监听clear事件 也可以触发清盘
+            let clearBtns = document.querySelectorAll('.clear');
+            for(let i=0;i<clearBtns.length;i++){
+                clearBtns[i].addEventListener('click',clear)
+            }
         },
         initView: function(){
             // 初始化页面Dom结构
@@ -67,13 +110,28 @@
             this.updateView();
         },
         updateView: function () {
-            const {boardArr} = this.boardObj;
-            const {size,guideLine}  = this.options;
-
+            const {boardArr,curScoreArr} = this.boardObj;
+            const {size,guideLine,curScoreBox,sumScoreBox}  = this.options;
+            let winNode = document.querySelector('.win');
+            let loseNode = document.querySelector('.lose');
+            winNode.classList.add('hidden');
+            loseNode.classList.add('hidden');
             // 更新得分视图
+            let curMax = Math.max.apply(null,curScoreArr);// 每次移动获得的最大得分
+            this.curScore = curScoreArr.reduce((prev,cur)=> prev + cur)
+            this.sumScore +=  this.curScore;
+            curScoreBox.innerText = `本次得分:${this.curScore}`;
+            sumScoreBox.innerText = `总分:${this.sumScore}`;
+            // 更新棋盘视图
             for (let i = 0; i < size; i++) {
                 let row = boardArr[i];
                 for (let j = 0; j <size; j++) {
+                    //每个进行清零
+                    let everyNode = document.querySelector(`div[data-key="${i+""+j}"]`);
+                    everyNode.innerText = '';
+                    everyNode.className = 'board_cell';
+                    
+                    // 清class
                     if (boardArr[i][j] !== 0) {
                         let updateNode = document.querySelector(`div[data-key="${i+""+j}"]`);
                         // 更新运动 + 根据周围情况判断 辅助线
@@ -115,12 +173,22 @@
         this.boardArr = [];
         this.usefulCells = []; // 空格
         this.size = argOptions.size;
-        this.level = argOptions.level;
+        this.level = 16;//argOptions.level;
+        this.isOver = false;
+        this.isWin = false;
+        this.curScoreArr = [0];//每次合并得到的合并值数组
         Object.assign(this, props);
         return this;
     }
 
     Board.prototype = {
+        clear:function(){
+            this.boardArr = [];
+            this.usefulCells = [];
+            this.isOver = false;
+            this.isWin = false;
+            this.curScoreArr = [0];
+        },
         initBoard: function () {
             // 初始化棋盘，全0 
             for (let i = 0; i < this.size; i++) {
@@ -153,11 +221,81 @@
                     }
                 }
             }
+        },
+        move:function(dir){
+            this.curScoreArr = [0];
+            //0:左, 1:上, 2:右, 3:下
+            //根据不同方向得到的新数组 convertArr()            
+            let convertedArr = convertArr(this.boardArr, dir);
+            if(this.isGameOver(convertedArr)) {
+                this.isOver = true;
+                return;
+            }
+            // 合并后的二维数组
+            let mergedArr = this.mergeArr(convertedArr);
+            // 将数组转换为正常数组
+            let resultArr =  normalArr(mergedArr,dir);
+            this.boardArr = resultArr;
+            // 判断移动完之后是否出现了2048 curScore <== 1024 
+            if(this.curScoreArr.includes(16)){
+                this.isWin = true;
+                return ;
+            } 
+            //有效移动 随机产生新格子
+            this.gernerateNew(1);
+        },
+        clear:function(ops){
+            this.boardArr = [];
+            this.usefulCells = []; // 空格
+            this.size = argOptions.size;
+            this.level = 16;//argOptions.level;
+            this.isOver = false;
+            this.isWin = false;
+            this.curScoreArr = [0];
+            Object.assign(this, ops);
+            this.initBoard();
+        },
+        isGameOver:function(arr){
+            for (let i = 0; i < arr.length; i++) {
+                let row = arr[i];
+                // checkMoveable 情况1，移动前方有空位
+                if(row.indexOf(0)>-1&&row.indexOf(0)<4){
+                    return false;
+                }
+                // 情况2 有可以合并的格子
+                for(let j=0;j<row.length;j++){
+                    if(row[j]==row[j+1]) 
+                        return false;
+                }
+                return true;
+            }
+        },
+        mergeArr:function(arr) {
+            let newArr = [[],[],[],[]];
+            // 将每行进行零归一操作 (将零归到一起)
+            for (let i = 0; i < this.size; i++) {
+                let row = arr[i];
+                // 将row的所有0移到末尾变为 2200
+                row = getMoveInit(row);
+                newArr[i] = row;
+               
+                // 合并
+                for(let j=0;j<this.size;j++){
+                    if(row[j+1]==row[j]&&row[j]!==0){
+                        newArr[i][j] += newArr[i][j+1];
+                        // 每次得分： 新增合并数值
+                        this.curScoreArr.push(newArr[i][j]);
+                        //sumScore += curScore;
+                        newArr[i][j+1] = 0;
+                    }
+                }
+        
+                // 再次调用零归一操作(因为会新产生0)
+                newArr[i] = getMoveInit(newArr[i]);
+            }
+            return newArr;
         }
     }
-
-
-
 
     game2048.prototype.init.prototype = game2048.prototype;
     window.game2048 = game2048;
