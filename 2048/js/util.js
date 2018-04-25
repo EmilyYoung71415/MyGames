@@ -9,8 +9,7 @@ function checkCombine(arr,index){
     let temp = arr[index];
     if(index>0){
         let leftIndex = index;
-        while(leftIndex>0){
-            leftIndex--;
+        while(leftIndex--){
             if(arr[leftIndex]!==0){
                 if(arr[leftIndex]===temp) 
                 backArr[0]=1;

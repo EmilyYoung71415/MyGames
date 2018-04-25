@@ -37,8 +37,9 @@
             this.curScore = 0;
             this.curScoreBox = []; //存放每次移动的得到的新值arr
             this.sumScore = 0;
+            const {boardBox} = this.options;
             //如果用户没有传容器 自己帮用户创建一个             
-            if (!this.options.boardBox) {
+            if (!boardBox) {
                 boardBox = document.createElement('div');
                 boardBox.classList.add("board");
                 document.body.appendChild(boardBox);
@@ -51,33 +52,35 @@
             if(this.options.bgMusic) playSound('bgMusic');
             this.initView();
             //监听键盘事件触发updateView
-            let move=(e)=>{
+            let move=(dir)=>{
                 // 0:左, 1:上 2:右, 3:下
-                switch (e.keyCode) {
-                    case 37://left
-                        e.preventDefault();
-                        this.boardObj.move(0);break;
-                    case 38://up
-                        e.preventDefault();
-                        this.boardObj.move(1);break;
-                    case 39://right
-                        e.preventDefault();
-                        this.boardObj.move(2);break;
-                    case 40://down
-                        e.preventDefault();
-                        this.boardObj.move(3);break;
-                }
-                // 更新最终棋盘结果                
-                this.updateView();                                
-                // 游戏结束
-                if(this.boardObj.isLose()){
-                    let loseNode = document.querySelector('.lose');
-                    loseNode.classList.remove('hidden');
+                this.boardObj.move(dir);
+                // 无效移动 ---特效抖一抖
+                if(!this.boardObj.isMoveable){
+                    const {boardBox} = this.options;
+                    boardBox.classList.add('shake');
+                    boardBox.addEventListener('animationend',function(){
+                        boardBox.classList.remove('shake');
+                    })
                     return;
                 }
+                // 有效移动则更新最终棋盘结果  
+                // 每次是拿到board的board值进行绘制 所以先updateView再进行输赢判断              
+                this.updateView();
+                // 游戏胜利
                 if(this.boardObj.isWin){
-                    let winNode = document.querySelector('.win');
-                    winNode.classList.remove('hidden');
+                    setTimeout(function(){
+                        let winNode = document.querySelector('.win');
+                        winNode.classList.remove('hidden');
+                    },2000);
+                    return;
+                }                              
+                // 游戏结束
+                if(this.boardObj.isLose()){
+                    setTimeout(function(){
+                        let loseNode = document.querySelector('.lose');
+                        loseNode.classList.remove('hidden');
+                    },500);
                     return;
                 }
             }
@@ -89,7 +92,46 @@
                 // 更新视图 ==》 重新初始化棋盘界面 + 隐藏clear界面
                 this.updateView();
             }
-            window.addEventListener('keydown', move);
+            window.addEventListener('keydown', function(e){
+                switch (e.keyCode) {
+                    case 37://left
+                        e.preventDefault();
+                        move(0);break;
+                    case 38://up
+                        e.preventDefault();
+                        move(1);break;
+                    case 39://right
+                        e.preventDefault();
+                        move(2);break;
+                    case 40://down
+                        e.preventDefault();
+                        move(3);break;
+                }
+            });
+            // 移动端
+            let 
+                touchStartX=0,
+                touchStartY=0,
+                touchEndX=0,
+                touchEndY=0;
+            window.addEventListener('touchstart',function(event){
+                event.preventDefault();
+                touchStartX=event.touches[0].pageX;
+                touchStartY=event.touches[0].pageY;
+            });
+            window.addEventListener('touchend',function(event){
+                event.preventDefault();
+                touchEndX=event.changedTouches[0].pageX;
+                touchEndY=event.changedTouches[0].pageY;
+                let disX = touchStartX - touchEndX;
+                let disY = touchStartY - touchEndY;
+                let absdisX=Math.abs(disX);
+                let absdisY=Math.abs(disY);
+                // 确定移动方向   0:左, 1:上 2:右, 3:下
+                let direction = absdisX > absdisY ? (disX < 0 ? 2 : 0) : (disY < 0 ? 3 : 1);
+                move(direction);  
+            });
+
             // 监听clear事件 也可以触发清盘
             let clearBtns = document.querySelectorAll('.clear');
             for(let i=0;i<clearBtns.length;i++){
@@ -141,7 +183,10 @@
                         let updateNode = document.querySelector(`div[data-key="${i+""+j}"]`);
                         // 不同数值对应不同的背景颜色
                         updateNode.classList.add(`cell-con-${boardArr[i][j]}`);
-
+                        // 目标块高亮
+                        if(boardArr[i][j]===this.options.level){
+                            updateNode.classList.add('targetLevel');
+                        }
                         // 如果添加辅助线
                         if(guideLine){
                             let col = [];
@@ -178,6 +223,7 @@
         this.size = argOptions.size;
         this.level = argOptions.level;
         this.isWin = false;
+        this.isMoveable = true;
         this.curScoreArr = [0];//每次合并得到的合并值数组
         Object.assign(this, props);
         return this;
@@ -218,7 +264,13 @@
                 }
             }
         },
-        move:function(dir){           
+        move:function(dir){
+            this.isMoveable = true;
+            // 无效移动无需计算
+            if(!this.moveableCheck(dir)){
+                this.isMoveable = false;
+                return;
+            };          
             // 每次移动前初始化
             this.curScoreArr = [0];
             //0:左, 1:上, 2:右, 3:下
@@ -233,7 +285,7 @@
             if(this.curScoreArr.includes(this.level)){
                 this.isWin = true;
                 // 如果成功则无需再产生新棋子
-                return ;
+                return;
             } 
             //有效移动 随机产生新格子
             this.gernerateNew(1);
@@ -271,27 +323,26 @@
         // 判断按既定方向的该次移动是否有效
         // 方向只是确定了行移还是列移
         // 判断该行/列是否有0 或 可以合并
-        isMoveable:function(arr){
-            /* 
-                boarArr: left        arr    
-                    0 2 2 0 ---- 2 2 0 0
-                    2 4 2 0 ---- 2 4 2 0
-                    2 2 0 4 ---- 2 2 4 0
-                    0 0 2 0 ---- 2 0 0 0
-            */
-            /*for (let i = 0; i < arr.length; i++) {
-                let row = arr[i];
-                // checkMoveable 情况1，移动前方有空位
-                if(row.indexOf(0)>-1&&row.indexOf(0)<4){
-                    return false;
+        moveableCheck:function(dir){
+            // 每行判断自己前面的元素是否为0(不是判断0是否存在，有可能0在最后哦)
+            // 转换之后判断this.boardArr[i] 即是移动方向的row
+            let convertedArr = convertArr(this.boardArr, dir);
+            for(let i=0;i<this.size;i++){
+                // 得到当前行 怎么判断当前行是可移动的呢？ 
+                // 将所有0移动到棋row最后，如果两个row相同则不能移动
+                // 即移动方向上移动前方无空位，[且]无可合并的对象
+                let row = getMoveInit(convertedArr[i]);
+                if(row.toString()!==convertedArr[i].toString()){
+                    return true;
                 }
-                // 情况2 有可以合并的格子
-                for(let j=0;j<row.length;j++){
-                    if(row[j]==row[j+1]) 
-                        return false;
+                //情况2 有可以合并的格子
+                for(let j=0;j<this.size;j++){
+                    if(row[j]===row[j+1]){
+                        return true;
+                    } 
                 }
-                return true;
-            }*/
+            }
+            return false;
         },
         mergeArr:function(arr) {
             let newArr = [[],[],[],[]];

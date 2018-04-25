@@ -10,6 +10,7 @@ body {
     flex-direction: column;
     background: lightseagreen;
     color: #fff;
+    overflow: hidden;
 }
 
 header {
@@ -76,16 +77,16 @@ right {
 }
 
 .border-left{
-    border-left:4px solid var(--borderHighlight);
+    border-left:2px solid var(--borderHighlight);
 }
 .border-top{
-    border-top:4px solid var(--borderHighlight);
+    border-top:2px solid var(--borderHighlight);
 }
 .border-right{
-    border-right:4px solid var(--borderHighlight);
+    border-right:2px solid var(--borderHighlight);
 }
 .border-bottom{
-    border-bottom:4px solid var(--borderHighlight);
+    border-bottom:2px solid var(--borderHighlight);
 }
 
 
@@ -133,8 +134,9 @@ right {
 
 .win,.lose{
     background: rgb(243, 61, 61);
-    text-align: center;            
+    text-align: center; 
 }
+
 .lose{
     background: rgb(102, 87, 87);
 }
@@ -211,4 +213,13 @@ right {
 	75%{transform:rotateZ(0deg) translate(-3px,-2px)}
 	87.5%{transform:rotateZ(3deg) translate(3px,-2px)}
     100%{transform:rotateZ(1deg) translate(-1px,1px) }
+}
+
+
+/*目标块高亮*/
+.targetLevel {
+    transform:scale(1.1);
+    background: yellow !important;
+    border-color:#ffc600;
+    box-shadow: 0 0 10px #ffc600;
 }

@@ -71,7 +71,7 @@
     <audio data-key="256" src="sounds/256.wav"></audio>
     <audio data-key="512" src="sounds/512.wav"></audio>
     <audio data-key="1024" src="sounds/1024.wav"></audio>
-    <audio data-key="bgMusic" src="sounds/bg-Schnappi.mp3"></audio>
+    <audio data-key="bgMusic" src="sounds/bg-Schnappi.mp3" loop="loop"></audio>
     <script src="./js/util.js"></script>
     <script src="./js/index.js"></script>
     <script>
@@ -89,9 +89,16 @@
             })
         }   
         
+        // 点击开始游戏按钮
+        startBtn.addEventListener('click',startGame)
+        // 回车键盘
+        window.addEventListener('keydown',function(e){
+            if(e.keyCode==13){
+                startGame()
+            }
+        })
 
-        startBtn.addEventListener('click',function(e){
-            // 收集游戏配置选项
+        function startGame(){
             let bgMusic = true,
                 music = true;
             let chosedBtn = document.querySelector('.chosed');
@@ -111,10 +118,7 @@
                 sumScoreBox:document.querySelector('.sumscore'),
                 ...argOptions
             });
-        })
-
-    
-
+        }
         
     </script>
 </body>
