@@ -158,6 +158,7 @@ right {
 .chosed{
     background: rebeccapurple;
 }
+
 @media (max-width: 768px) {
     header {
         width: 90%;
@@ -191,4 +192,23 @@ right {
         transform: translateY(-50%);
         width: 300px;
     }
+}
+
+/*无效移动产生的动画*/
+.shake{
+    animation:shakeAm 0.2s ease-in;
+    /*当动画完成后，保持最后一个属性值*/
+    -webkit-animation:shakeAm 0.2s ease-in;
+}
+
+@keyframes shakeAm{
+	0%{transform:rotateZ(0deg) translate(0,0)}
+	12.5%{transform:rotateZ(5deg) translate(6px,6px)}
+	25%{transform:rotateZ(0deg) translate(-4px,5px)}
+	37.5%{transform:rotateZ(-5deg) translate(-6px,-6px)}
+	50%{transform:rotateZ(0deg) translate(0,0)}
+	62.5%{transform:rotateZ(3deg) translate(3px,4px)}
+	75%{transform:rotateZ(0deg) translate(-3px,-2px)}
+	87.5%{transform:rotateZ(3deg) translate(3px,-2px)}
+    100%{transform:rotateZ(1deg) translate(-1px,1px) }
 }

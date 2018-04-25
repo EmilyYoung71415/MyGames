@@ -67,8 +67,9 @@
                         e.preventDefault();
                         this.boardObj.move(3);break;
                 }
+                // 更新最终棋盘结果                
+                this.updateView();                                
                 // 游戏结束
-                this.updateView();
                 if(this.boardObj.isLose()){
                     let loseNode = document.querySelector('.lose');
                     loseNode.classList.remove('hidden');
@@ -80,12 +81,12 @@
                     return;
                 }
             }
-
             let clear=()=>{
                 this.boardObj.clear();
                 this.curScore = 0;
                 this.curScoreBox = []; //存放每次移动的得到的新值arr
                 this.sumScore = 0;
+                // 更新视图 ==》 重新初始化棋盘界面 + 隐藏clear界面
                 this.updateView();
             }
             window.addEventListener('keydown', move);
@@ -94,10 +95,6 @@
             for(let i=0;i<clearBtns.length;i++){
                 clearBtns[i].addEventListener('click',clear)
             }
-        },
-        isGameOver:function(){
-            const {boardArr} = this.boardObj;
-            // 全局无空格
         },
         initView: function(){
             // 初始化页面Dom结构
@@ -118,13 +115,14 @@
         updateView: function () {
             const {boardArr,curScoreArr} = this.boardObj;
             const {size,guideLine,curScoreBox,sumScoreBox}  = this.options;
+            // 隐藏弹出框
             let winNode = document.querySelector('.win');
             let loseNode = document.querySelector('.lose');
             winNode.classList.add('hidden');
             loseNode.classList.add('hidden');
             // 更新得分视图
             let curMax = Math.max.apply(null,curScoreArr);// 每次移动获得的最大得分
-            if(this.options.music) playSound(curMax);
+            if(this.options.music) playSound(curMax);// 算出每次移动合并得到的最大新生块 不同块对应不同音效
             this.curScore = curScoreArr.reduce((prev,cur)=> prev + cur)
             this.sumScore +=  this.curScore;
             curScoreBox.innerText = `本次得分:${this.curScore}`;
@@ -138,26 +136,23 @@
                     everyNode.innerText = '';
                     everyNode.className = 'board_cell';
                     
-                    // 清class
                     if (boardArr[i][j] !== 0) {
+                        // 根据Board矩阵有值的行列 找到对应的Dom节点
                         let updateNode = document.querySelector(`div[data-key="${i+""+j}"]`);
-                        // 更新运动 + 根据周围情况判断 辅助线
+                        // 不同数值对应不同的背景颜色
                         updateNode.classList.add(`cell-con-${boardArr[i][j]}`);
 
-                        // 添加辅助线
+                        // 如果添加辅助线
                         if(guideLine){
                             let col = [];
-                            col.push(
-                                boardArr[0][j],
-                                boardArr[1][j],
-                                boardArr[2][j],
-                                boardArr[3][j]
-                            )
+                            for(let k = 0;k<size;k++){
+                                col.push(boardArr[k][j])
+                            }
                             // 找到矩阵中最近一圈的有数字的位置，判断是否相等
                             let rowDir = checkCombine(row,j); // 本行的第几个元素 [0,0] 左右
                             let colDir = checkCombine(col,i); // 本列的第几个元素 [0,0] 上下
-                            let direction = getConvertDir(rowDir,colDir);
-
+                            let direction = getConvertDir(rowDir,colDir);// 根据行列数组获得四个方向的关键词
+                            // 如果方向数组可合并的对象，那么在对应的方向上加上border
                            if(direction.length){
                                 for(let i=0;i<direction.length;i++){
                                     updateNode.classList.add(`border-${direction[i]}`);
@@ -175,6 +170,7 @@
 
     /**
      * @class Board对象
+     * @func  专职处理棋盘数据
      */
     function Board(props) {
         this.boardArr = [];
@@ -208,6 +204,7 @@
                 this.boardArr[selectedCell.x][selectedCell.y] = newNumber;
             }
         },
+        // 从棋盘获得可填充的空格区域
         getUsefulCells: function () {
             this.usefulCells = []; // 每次清空
             for (let i = 0; i < this.size; i++) {
@@ -221,8 +218,8 @@
                 }
             }
         },
-        move:function(dir){
-            
+        move:function(dir){           
+            // 每次移动前初始化
             this.curScoreArr = [0];
             //0:左, 1:上, 2:右, 3:下
             //根据不同方向得到的新数组 convertArr()            
@@ -242,15 +239,10 @@
             this.gernerateNew(1);
         },
         isLose:function(){
+            // 没有可空格 且无法合并
             // 判断是否还存在0
-            for (let i = 0; i < this.size; i++){ 
-                for (let j = 1; j < this.size; j++) {
-                    if(!this.boardArr[i][j]){
-                        return false;
-                    }
-                }
-            }
-
+            this.getUsefulCells();
+            if(this.usefulCells.length) return false;
             //  元素上下左右不等
             for (let i = 0; i < this.size; i++){ // 左右不等
                 for (let j = 1; j < this.size; j++) {
@@ -276,7 +268,9 @@
             Object.assign(this, ops);
             this.initBoard();
         },
-        // 判断按既定方向该次的移动是否有效
+        // 判断按既定方向的该次移动是否有效
+        // 方向只是确定了行移还是列移
+        // 判断该行/列是否有0 或 可以合并
         isMoveable:function(arr){
             /* 
                 boarArr: left        arr    
@@ -285,7 +279,7 @@
                     2 2 0 4 ---- 2 2 4 0
                     0 0 2 0 ---- 2 0 0 0
             */
-            for (let i = 0; i < arr.length; i++) {
+            /*for (let i = 0; i < arr.length; i++) {
                 let row = arr[i];
                 // checkMoveable 情况1，移动前方有空位
                 if(row.indexOf(0)>-1&&row.indexOf(0)<4){
@@ -297,7 +291,7 @@
                         return false;
                 }
                 return true;
-            }
+            }*/
         },
         mergeArr:function(arr) {
             let newArr = [[],[],[],[]];
@@ -314,7 +308,6 @@
                         newArr[i][j] += newArr[i][j+1];
                         // 每次得分： 新增合并数值
                         this.curScoreArr.push(newArr[i][j]);
-                        //sumScore += curScore;
                         newArr[i][j+1] = 0;
                     }
                 }

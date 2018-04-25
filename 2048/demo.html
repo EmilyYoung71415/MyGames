@@ -27,12 +27,8 @@
         </div>
     </header>
     <!--棋盘-->
-    <div class="board">
-        <!-- <div class="board_cell cell-con-32" data-key="">
-            2
-        </div> -->
-        <!-- <div class="board_cell" data-key="">2</div>
-        <div class="board_cell" data-key="">2</div> -->
+    <div class="board ">
+        <!-- <div class="board_cell" data-key="">2</div> -->
     </div>
     <!--Welcome 游戏配置-->
     <div class="dialog welcome">
@@ -100,8 +96,8 @@
                 music = true;
             let chosedBtn = document.querySelector('.chosed');
             let level = Number(chosedBtn.innerHTML);
-            if(!checkBoxs[0].checked) bgMusic = false;
-            if(!checkBoxs[1].checked) music = false;
+            if(!checkBoxs[0].checked) music = false;
+            if(!checkBoxs[1].checked) bgMusic = false;
 
             let argOptions = {
                 level,
