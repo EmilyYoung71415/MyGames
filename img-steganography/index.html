@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #main{
+            width: 800px;
+            margin: 0 auto;
+        }
+        button,input{
+            cursor: pointer;
+        }
+        .desc{
+            color:lightseagreen;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id='main' class='section dark'>
+        <!--step1-->
+        <hr>
+        <div class="originImg">
+            <p class="desc">请上传预处理的图像</p>
+            <input type='file' id='imgFile' />
+            <img id='preview' class='preview hide' />
+        </div>
+        <!--step2-->
+        <hr>
+        <div class='fileUpload'>
+            <p class="desc">请上传预隐藏于图像中的文件</p>
+            <input type='file' id='file' />
+            <br /><br />
+            <button id='encode' class='submit'>隐藏文件于图像中</button>
+            <button id='decode' class='submit'>解析图像中的文件</button>
+        </div>
+        <!--step3-->
+        <div class="output">
+            <canvas id='canvas' style="display:none;"></canvas>
+            <img id='print' />
+            <div id="downloadfiles"></div>
+        </div>
+    </div>
+</body>
+<script src="./index.js"></script>
+<script>
+    var 
+        oInput = document.getElementById('imgFile'),
+        oFileAdd = document.getElementById('file'),
+        oEncodeButton = document.getElementById('encode'),
+        oDecodeButton = document.getElementById('decode'),
+        oCanvas = document.getElementById('canvas'),
+        oPreview = document.getElementById('preview'),
+        oPrint = document.getElementById('print');
+        oMask = new ImageMask({debug: false});
+
+    window.onload = function () {
+        oInput.addEventListener('change', importImage);
+        oEncodeButton.addEventListener('click', encode);
+        oDecodeButton.addEventListener('click', decode);
+    };
+
+
+    //上传的图片读入到canvas里
+    var importImage = function (e) {
+        var reader = new FileReader();
+
+        reader.onload = function (event) {
+            oCanvas.style.display = "none";
+            // 预览
+            oPreview.style.display = 'block';
+            //e.target.result就是图片的base64地址信息
+            oPreview.src = event.target.result;
+
+            // 初始化
+            oPrint.src = '';
+
+            //  图片=>canvas 获取像素信息
+            var img = new Image();
+            img.onload = function () {
+                var ctx = oCanvas.getContext('2d');
+                ctx.canvas.width = img.width;
+                ctx.canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+            };
+            img.src = event.target.result;
+        };
+
+        //转base64 
+        reader.readAsDataURL(e.target.files[0]);
+    };
+
+    var encode = function(){
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(oPreview, 0, 0, oPreview.width, oPreview.height);
+
+        var imgData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        oMask.hideFile(canvas, oFileAdd.files[0], function (result) {
+            if (result.success) {
+                //把canvas画布转换成img图像的两种方法：
+                //canvas.toDataURL(mimeType, qualityArgument) || canvas.toBlob(callback, mimeType, qualityArgument)
+                oPrint.src = canvas.toDataURL();
+            } else {
+                alert(result.message);
+            }
+        });
+    }
+
+
+    var decode = function () {
+        var file = oMask.revealFile(oCanvas);
+        createFileBlob(file.data, file.name);
+    };
+
+    // 工具函数
+    function createFileBlob(data, name) {
+        const file = new window.Blob([data], {
+            type: "application/octet-binary"
+        })
+        const fileUrl = window.URL.createObjectURL(file)
+
+        const oDownload = document.getElementById('downloadfiles')
+        const link = document.createElement('a')
+        link.setAttribute('href', fileUrl)
+        link.setAttribute('download', name)// a 标签添加下载功能 并指定下载图片的文件名
+
+        link.innerText = name + ' - Size: ' + file.size
+        oDownload.appendChild(link);
+    }
+
+</script>
+</html>

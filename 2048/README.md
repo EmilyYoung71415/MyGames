@@ -3,6 +3,14 @@
 
 ## 效果截图
 线上预览：
++ [yxyの2048小游戏😍](http://project.youngxyblog.com/MyGames/2048/index.html)
+
+<img src="http://gitbookpic.youngxyblog.com/18-4-27/78088921.jpg" width=300 height=300>
+
+<img src="http://gitbookpic.youngxyblog.com/18-4-27/4030681.jpg" width=300 height=300>
+
+
+
 
 
 ## 重要功能完成情况
@@ -15,11 +23,14 @@
 + [x] **移动端手势支持**
 + [x] **无效移动的动画特效**
 + [x] **目标块出现的(如2048)的目标块高亮**
++ [x] **线上部署**
 + [ ] **移动块的位移动画**
-+ [ ] **线上部署**
 
-## 编码过程还原
-记录我拿到这个游戏后从需求的到功能完成的编码设计&思考
+
+## 后记
+
+关于这个游戏的编码思考&总结，有兴趣的可以移步[**这里**](https://github.com/EmilyYoung71415/MyGames/issues/2)
+
 
 如果对您有启发或帮助，请右上角star一下鼓励我 🤣🤣
 
