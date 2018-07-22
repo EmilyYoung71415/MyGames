@@ -151,3 +151,21 @@ function normalArr(arr,dir) {
     audio.currentTime = 0; // 每次播放之后都使音频播放进度归零
     audio.play(); // 播放相应音效
  }
+/* 确定移动方向   0:左, 1:上 2:右, 3:下 */
+// 排除方向上的边缘格子
+// 下 i!=0 ; 上:i!=size; 左：j!=size;右：j！=0
+ function addmotion(node,dir,size,i,j){
+    if(dir===0&&j===size-1){
+        return;
+    }
+    if(dir===1&&i===size-1){
+        return;
+    }
+    if(dir===2&&j===0){
+        return;
+    }
+    if(dir===3&&i===0){
+        return;
+    }
+    node.classList.add(`move-${dir}`);
+ }

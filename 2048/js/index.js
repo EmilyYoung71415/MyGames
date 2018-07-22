@@ -118,7 +118,7 @@
                 event.preventDefault();
                 touchStartX=event.touches[0].pageX;
                 touchStartY=event.touches[0].pageY;
-            });
+            },{ passive: false });
             window.addEventListener('touchend',function(event){
                 event.preventDefault();
                 touchEndX=event.changedTouches[0].pageX;
@@ -130,7 +130,7 @@
                 // 确定移动方向   0:左, 1:上 2:右, 3:下
                 let direction = absdisX > absdisY ? (disX < 0 ? 2 : 0) : (disY < 0 ? 3 : 1);
                 move(direction);  
-            });
+            },{ passive: false });
 
             // 监听clear事件 也可以触发清盘
             let clearBtns = document.querySelectorAll('.clear');
@@ -155,7 +155,7 @@
             this.updateView();
         },
         updateView: function () {
-            const {boardArr,curScoreArr} = this.boardObj;
+            const {boardArr,curScoreArr,direction,initFlag} = this.boardObj;
             const {size,guideLine,curScoreBox,sumScoreBox}  = this.options;
             // 隐藏弹出框
             let winNode = document.querySelector('.win');
@@ -196,15 +196,17 @@
                             // 找到矩阵中最近一圈的有数字的位置，判断是否相等
                             let rowDir = checkCombine(row,j); // 本行的第几个元素 [0,0] 左右
                             let colDir = checkCombine(col,i); // 本列的第几个元素 [0,0] 上下
-                            let direction = getConvertDir(rowDir,colDir);// 根据行列数组获得四个方向的关键词
+                            let dirArr = getConvertDir(rowDir,colDir);// 根据行列数组获得四个方向的关键词
                             // 如果方向数组可合并的对象，那么在对应的方向上加上border
-                           if(direction.length){
-                                for(let i=0;i<direction.length;i++){
-                                    updateNode.classList.add(`border-${direction[i]}`);
+                           if(dirArr.length){
+                                for(let i=0;i<dirArr.length;i++){
+                                    updateNode.classList.add(`border-${dirArr[i]}`);
                                 }
                            }
                            
                         }
+                        !initFlag&&addmotion(updateNode,direction,this.options.size,i,j);
+                        //updateNode.classList.add(`move-${direction}`);
                         updateNode.innerText = boardArr[i][j];
                     }
                 }
@@ -225,6 +227,8 @@
         this.isWin = false;
         this.isMoveable = true;
         this.curScoreArr = [0];//每次合并得到的合并值数组
+        this.direction = null;
+        this.initFlag = true;
         Object.assign(this, props);
         return this;
     }
@@ -241,6 +245,7 @@
             this.gernerateNew(2);
         },
         gernerateNew: function (count) {
+            this.initFlag = count===2?true:false;
             while (count--) {
                 this.getUsefulCells();
                 // selectCell
@@ -265,6 +270,7 @@
             }
         },
         move:function(dir){
+            this.direction = dir;
             this.isMoveable = true;
             // 无效移动无需计算
             if(!this.moveableCheck(dir)){

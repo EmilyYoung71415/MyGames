@@ -223,3 +223,39 @@ right {
     border-color:#ffc600;
     box-shadow: 0 0 10px #ffc600;
 }
+/* 确定移动方向   0:左, 1:上 2:右, 3:下 */
+
+.move-0{
+    animation: left .1s ease-in-out;
+}
+
+@keyframes left{
+    0% {transform: translate(100%,0%);}
+    100% {transform: translate(0,0);}
+}
+
+.move-1{
+    animation: up .1s ease-in-out;
+}
+
+@keyframes up{
+    0% {transform: translate(0%,100%);}
+    100% {transform: translate(0,0);}
+}
+
+.move-2{
+    animation: right .1s ease-in-out;
+}
+
+@keyframes right{
+    0% {transform: translate(-100%,0%);}
+    100% {transform: translate(0,0);}
+}
+.move-3{
+    animation: down .1s ease-in-out;
+}
+
+@keyframes down{
+    0% {transform: translate(0%,-100%);}
+    100% {transform: translate(0,0);}
+}
