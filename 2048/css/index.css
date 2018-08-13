@@ -19,6 +19,7 @@ header {
     margin: 0 auto;
     font-size: 2rem;
     text-align: center;
+    white-space: nowrap;
 }
 
 /*logo curscore sumscore 2 4 4*/
@@ -35,7 +36,7 @@ right {
     line-height: 60px;
     text-align: center;
     font-size: 18px;
-    padding: 0 10px;
+    padding: 0 20px;
     background: lightcoral;
     border-radius: 5px;
     box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1),
@@ -89,6 +90,29 @@ right {
     border-bottom:2px solid var(--borderHighlight);
 }
 
+.github{
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+    width: 200px;
+    height: 40px;
+    transform: translateX(-50%);
+    text-align: center;
+    text-decoration: none;
+    color: #000;
+}
+.github:hover{
+    color: #fff;
+}
+
+.github span{
+    color: #000;
+    font-weight: bold;
+}
+.github img{
+    width: 28px;
+    height: 28px;   
+}
 
 .hidden{
     display: none;

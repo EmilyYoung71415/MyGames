@@ -37,7 +37,7 @@
             this.curScore = 0;
             this.curScoreBox = []; //存放每次移动的得到的新值arr
             this.sumScore = 0;
-            const {boardBox} = this.options;
+            let {boardBox} = this.options;
             //如果用户没有传容器 自己帮用户创建一个             
             if (!boardBox) {
                 boardBox = document.createElement('div');
