@@ -21,9 +21,6 @@
         game2048 = function (argOptions) {
             return new game2048.prototype.init(argOptions);
         }
-
-
-
     game2048.prototype = {
         init: function (options) {
             // 解析键盘dom、初始化参数值(如果用户没传则使用默认参数值)
@@ -44,7 +41,6 @@
                 boardBox.classList.add("board");
                 document.body.appendChild(boardBox);
             }
-
             this.play();
             return this;
         },
@@ -114,13 +110,19 @@
                 touchStartY=0,
                 touchEndX=0,
                 touchEndY=0;
-            window.addEventListener('touchstart',function(event){
-                event.preventDefault();
+            document.addEventListener('touchstart',function(event){
+                if(event.target.className.includes('clear')){
+                    clear()
+                    return;
+                }
                 touchStartX=event.touches[0].pageX;
                 touchStartY=event.touches[0].pageY;
-            },{ passive: false });
-            window.addEventListener('touchend',function(event){
-                event.preventDefault();
+            });
+            document.addEventListener('touchend',function(event){
+                if(event.target.className.includes('clear')){
+                    clear()
+                    return;
+                }
                 touchEndX=event.changedTouches[0].pageX;
                 touchEndY=event.changedTouches[0].pageY;
                 let disX = touchStartX - touchEndX;
@@ -128,9 +130,11 @@
                 let absdisX=Math.abs(disX);
                 let absdisY=Math.abs(disY);
                 // 确定移动方向   0:左, 1:上 2:右, 3:下
+                // 设定滑动阀值，当滑动xx距离才纳入滑动动作
+                 if(absdisX<30&&absdisY<30) return;
                 let direction = absdisX > absdisY ? (disX < 0 ? 2 : 0) : (disY < 0 ? 3 : 1);
                 move(direction);  
-            },{ passive: false });
+            });
 
             // 监听clear事件 也可以触发清盘
             let clearBtns = document.querySelectorAll('.clear');

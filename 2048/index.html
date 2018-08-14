@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>Document</title>
     <link rel="stylesheet" href="./css/index.css">
     <link rel="stylesheet" href="./css/theme.css">
@@ -14,7 +14,7 @@
     <!--标题-->
     <header>
         <div class="left">
-            <p>2048</p>
+            2048
         </div>
         <div class="curscore">
             本次得分:<br>0
@@ -23,7 +23,7 @@
             总分:<br>0
         </div>
         <div class="right clear">
-            <p>重新开始</p>
+            重新开始
         </div>
     </header>
     <!--棋盘-->
@@ -92,15 +92,17 @@
                 levelBtns[i].classList.toggle('chosed')
             })
         }   
-        
+
         // 点击开始游戏按钮
         startBtn.addEventListener('click',startGame)
+        startBtn.addEventListener('touchstart',startGame)
         // 回车键盘
         window.addEventListener('keydown',function(e){
             if(e.keyCode==13){
                 startGame()
             }
         })
+
 
         function startGame(){
             let bgMusic = true,
@@ -110,17 +112,19 @@
             if(!checkBoxs[0].checked) music = false;
             if(!checkBoxs[1].checked) bgMusic = false;
 
-            let argOptions = {
-                level,
-                bgMusic,
-                music
-            }
+            // let argOptions = {
+            //     level,
+            //     bgMusic,
+            //     music
+            // }
             welcomeBox.classList.add('hidden');
             game2048({
                 boardBox :document.querySelector(".board"),
                 curScoreBox:document.querySelector('.curscore'),
                 sumScoreBox:document.querySelector('.sumscore'),
-                ...argOptions
+                level:level,
+                bgMusic:bgMusic,
+                music:music
             });
         }
         

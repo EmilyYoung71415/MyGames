@@ -11,6 +11,8 @@ body {
     background: lightseagreen;
     color: #fff;
     overflow: hidden;
+    /** 禁止页面下滑操作，防止下滑调用页面滚动而不是指定行为**/
+    touch-action: none;
 }
 
 header {
@@ -29,14 +31,15 @@ right {
     flex: 0 0 10%;
 }
 
-.left>p,
-.right>p {
-    width: 80px;
-    height: 60px;
-    line-height: 60px;
+.left,
+.right{
+    width: 60px;
+    height: 40px;
+    line-height: 40px;
     text-align: center;
     font-size: 18px;
     padding: 0 20px;
+    margin: 10px 0;
     background: lightcoral;
     border-radius: 5px;
     box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1),
