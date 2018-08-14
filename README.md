@@ -6,6 +6,5 @@
 # 概览
 
 + [2048改进版](./2048)
-+ [canvas图片爆炸效果](./app-boom-effect)
++ [canvas图片爆炸效果](./boom-Effect)
 + [canvas图片隐写](./img-steganography)
-+ [canvas律随音动](./music-visualize)

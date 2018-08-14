@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/shake.css">
+</head>
+
+<body>
+    <span id="dragDiv">卸载</span>
+    <div>
+         <img src="img/logo.jpg" draggable="true" id="img1"/>  
+        <img src="img/pic.png" draggable="true" id="img2"/>
+    </div>
+   <canvas id="canvas"></canvas>
+</body>
+<script src="js/colorthief.js"></script>
+<script src="js/boom.js"></script>
+<script type="text/javascript">
+    var dragDiv = document.getElementById('dragDiv');
+    var oImgs = document.querySelectorAll('img');
+    window.onload = function(){
+		drag();
+	}
+    function drag(){
+        let eleDrag = null;
+        
+        dragDiv.addEventListener('dragenter', function (e) { //拖拽元素进入目标元素触发事件
+            this.className = 'highlight';
+        }, false);
+
+        //拖拽元素在目标元素上移动的时候触发的事件
+        dragDiv.addEventListener('dragover', function (e) { 
+            e.dataTransfer.dragEffect = 'copy';
+            e.preventDefault(); 
+        }, false);
+
+        //被拖拽的元素在目标元素上同时鼠标放开触发的事件（放）的操作，执行爆炸
+        dragDiv.addEventListener('drop', function (e) { 
+            if(confirm('确定卸载吗?')){
+                boom(eleDrag);
+                //eleDrag.parentNode.removeChild(eleDrag);
+            }
+            this.className = '';
+        }, false)
+
+        for(var i=0;i<oImgs.length;i++){
+            oImgs[i].ondragstart = function(ev){
+                ev.dataTransfer.effectAllowed = "move";
+                eleDrag = ev.target;
+                return true;
+            }
+            oImgs[i].ondragend = function(ev){
+                eleDrag = null;
+                return false
+            }
+        }
+
+
+        dragDiv.addEventListener('dragleave', function (e) { //拖拽离开
+            this.className = '';
+        }, false);
+
+    }
+</script>
+
+</html>
